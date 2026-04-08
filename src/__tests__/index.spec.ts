@@ -55,15 +55,13 @@ describe('parse — starting position', () => {
   });
 
   it('parses white to move', () => {
-    expect(parse(STARTING)?.turn).toBe('w');
+    expect(parse(STARTING)?.turn).toBe('white');
   });
 
   it('parses all castling rights', () => {
     expect(parse(STARTING)?.castlingRights).toEqual({
-      bK: true,
-      bQ: true,
-      wK: true,
-      wQ: true,
+      black: { king: true, queen: true },
+      white: { king: true, queen: true },
     });
   });
 
@@ -81,15 +79,15 @@ describe('parse — starting position', () => {
 
   it('parses white king on e1', () => {
     expect(parse(STARTING)?.board.get('e1')).toEqual({
-      color: 'w',
-      type: 'k',
+      color: 'white',
+      type: 'king',
     });
   });
 
   it('parses black queen on d8', () => {
     expect(parse(STARTING)?.board.get('d8')).toEqual({
-      color: 'b',
-      type: 'q',
+      color: 'black',
+      type: 'queen',
     });
   });
 });
@@ -98,7 +96,7 @@ describe('parse — after e4', () => {
   const FEN = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
 
   it('parses black to move', () => {
-    expect(parse(FEN)?.turn).toBe('b');
+    expect(parse(FEN)?.turn).toBe('black');
   });
 
   it('parses en passant square e3', () => {
@@ -106,7 +104,10 @@ describe('parse — after e4', () => {
   });
 
   it('parses white pawn on e4', () => {
-    expect(parse(FEN)?.board.get('e4')).toEqual({ color: 'w', type: 'p' });
+    expect(parse(FEN)?.board.get('e4')).toEqual({
+      color: 'white',
+      type: 'pawn',
+    });
   });
 
   it('parses empty e2', () => {
@@ -292,19 +293,15 @@ describe('parse — invalid fullmove number', () => {
 describe('parse — castling variants', () => {
   it('parses no castling rights', () => {
     expect(parse('4k3/8/8/8/8/8/8/4K3 w - - 0 1')?.castlingRights).toEqual({
-      bK: false,
-      bQ: false,
-      wK: false,
-      wQ: false,
+      black: { king: false, queen: false },
+      white: { king: false, queen: false },
     });
   });
 
   it('parses partial castling rights', () => {
     expect(parse('4k3/8/8/8/8/8/8/4K3 w Kq - 0 1')?.castlingRights).toEqual({
-      bK: false,
-      bQ: true,
-      wK: true,
-      wQ: false,
+      black: { king: false, queen: true },
+      white: { king: true, queen: false },
     });
   });
 });

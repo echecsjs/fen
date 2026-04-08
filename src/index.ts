@@ -1,6 +1,7 @@
 import type {
   CastlingRights,
   Color,
+  EnPassantSquare,
   File,
   Piece,
   PieceType,
@@ -31,8 +32,25 @@ interface ParseOptions {
 const STARTING_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 const FILES: File[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-const PIECE_TYPES = new Set<string>(['p', 'n', 'b', 'r', 'q', 'k']);
 const RANKS: Rank[] = ['8', '7', '6', '5', '4', '3', '2', '1'];
+
+const CHAR_TO_PIECE_TYPE: Record<string, PieceType> = {
+  b: 'bishop',
+  k: 'king',
+  n: 'knight',
+  p: 'pawn',
+  q: 'queen',
+  r: 'rook',
+};
+
+const PIECE_TYPE_TO_CHAR: Record<PieceType, string> = {
+  bishop: 'b',
+  king: 'k',
+  knight: 'n',
+  pawn: 'p',
+  queen: 'q',
+  rook: 'r',
+};
 
 function makeError(message: string, offset = 0): ParseError {
   return { column: offset + 1, line: 1, message, offset };
@@ -66,13 +84,13 @@ function parsePlacement(
       const emptyCount = Number.parseInt(char, 10);
       if (Number.isNaN(emptyCount)) {
         const lower = char.toLowerCase();
-        if (!PIECE_TYPES.has(lower)) {
+        const type = CHAR_TO_PIECE_TYPE[lower];
+        if (type === undefined) {
           onError?.(makeError(`Invalid piece type: "${char}"`));
           // eslint-disable-next-line unicorn/no-null
           return null;
         }
-        const color: Color = char === char.toUpperCase() ? 'w' : 'b';
-        const type = lower as PieceType;
+        const color: Color = char === char.toUpperCase() ? 'white' : 'black';
         const file = FILES[fileIndex];
         if (file === undefined) {
           // eslint-disable-next-line unicorn/no-null
@@ -109,14 +127,18 @@ function parseCastling(castling: string): CastlingRights | null {
   }
 
   return {
-    bK: castling.includes('k'),
-    bQ: castling.includes('q'),
-    wK: castling.includes('K'),
-    wQ: castling.includes('Q'),
+    black: {
+      king: castling.includes('k'),
+      queen: castling.includes('q'),
+    },
+    white: {
+      king: castling.includes('K'),
+      queen: castling.includes('Q'),
+    },
   };
 }
 
-function stringifyPlacement(board: Map<Square, Piece>): string {
+function stringifyPlacement(board: ReadonlyMap<Square, Piece>): string {
   const rankStrings: string[] = [];
 
   for (const rank of RANKS) {
@@ -132,7 +154,8 @@ function stringifyPlacement(board: Map<Square, Piece>): string {
           rankString += String(emptyCount);
           emptyCount = 0;
         }
-        rankString += p.color === 'w' ? p.type.toUpperCase() : p.type;
+        const char = PIECE_TYPE_TO_CHAR[p.type];
+        rankString += p.color === 'white' ? char.toUpperCase() : char;
       }
     }
 
@@ -147,16 +170,16 @@ function stringifyPlacement(board: Map<Square, Piece>): string {
 
 function stringifyCastling(rights: CastlingRights): string {
   let result = '';
-  if (rights.wK) {
+  if (rights.white.king) {
     result += 'K';
   }
-  if (rights.wQ) {
+  if (rights.white.queen) {
     result += 'Q';
   }
-  if (rights.bK) {
+  if (rights.black.king) {
     result += 'k';
   }
-  if (rights.bQ) {
+  if (rights.black.queen) {
     result += 'q';
   }
   return result.length > 0 ? result : '-';
@@ -210,6 +233,8 @@ function parse(input: string, options?: ParseOptions): Position | null {
     return null;
   }
 
+  const turn: Color = turnString === 'w' ? 'white' : 'black';
+
   const castlingRights = parseCastling(castlingString);
   if (castlingRights === null) {
     options?.onError?.(
@@ -230,8 +255,8 @@ function parse(input: string, options?: ParseOptions): Position | null {
     return null;
   }
 
-  const enPassantSquare: Square | undefined =
-    epString === '-' ? undefined : (epString as Square);
+  const enPassantSquare: EnPassantSquare | undefined =
+    epString === '-' ? undefined : (epString as EnPassantSquare);
 
   const halfmoveClock = Number.parseInt(halfString, 10);
   if (Number.isNaN(halfmoveClock) || halfmoveClock < 0) {
@@ -262,12 +287,12 @@ function parse(input: string, options?: ParseOptions): Position | null {
     let pawnOnBackRank = false;
 
     for (const [square, piece] of board) {
-      if (piece.color === 'w') {
+      if (piece.color === 'white') {
         whitePieces += 1;
-        if (piece.type === 'k') {
+        if (piece.type === 'king') {
           whiteKings += 1;
         }
-        if (piece.type === 'p') {
+        if (piece.type === 'pawn') {
           whitePawns += 1;
           if (square.endsWith('1') || square.endsWith('8')) {
             pawnOnBackRank = true;
@@ -275,10 +300,10 @@ function parse(input: string, options?: ParseOptions): Position | null {
         }
       } else {
         blackPieces += 1;
-        if (piece.type === 'k') {
+        if (piece.type === 'king') {
           blackKings += 1;
         }
-        if (piece.type === 'p') {
+        if (piece.type === 'pawn') {
           blackPawns += 1;
           if (square.endsWith('1') || square.endsWith('8')) {
             pawnOnBackRank = true;
@@ -324,18 +349,19 @@ function parse(input: string, options?: ParseOptions): Position | null {
     enPassantSquare,
     fullmoveNumber,
     halfmoveClock,
-    turn: turnString,
+    turn,
   };
 }
 
 function stringify(position: Position): string {
   const placement = stringifyPlacement(position.board);
+  const turn = position.turn === 'white' ? 'w' : 'b';
   const castling = stringifyCastling(position.castlingRights);
   const enPassant = position.enPassantSquare ?? '-';
 
   return [
     placement,
-    position.turn,
+    turn,
     castling,
     enPassant,
     String(position.halfmoveClock),
@@ -347,11 +373,13 @@ export type { ParseError, ParseOptions, ParseWarning };
 export type {
   CastlingRights,
   Color,
+  EnPassantSquare,
   File,
   Piece,
   PieceType,
   Position,
   Rank,
+  SideCastlingRights,
   Square,
 } from './types.js';
 export { STARTING_FEN, stringify };

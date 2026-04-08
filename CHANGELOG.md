@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.0.0] - 2026-04-09
+
+### Changed
+
+- `Color` type from `'w' | 'b'` to `'white' | 'black'`.
+- `PieceType` type from single-char (`'p'`, `'n'`, `'b'`, `'r'`, `'q'`, `'k'`)
+  to full names (`'pawn'`, `'knight'`, `'bishop'`, `'rook'`, `'queen'`,
+  `'king'`).
+- `CastlingRights` from flat `{ wK, wQ, bK, bQ }` to nested
+  `{ white: { king, queen }, black: { king, queen } }`.
+- `Position.board` from `Map` to `ReadonlyMap`.
+- En passant square type narrowed from `Square` to `` `${File}${'3' | '6'}` ``.
+
+### Added
+
+- `EnPassantSquare` and `SideCastlingRights` type exports.
+
+### Fixed
+
+- ESLint config ordering (`eslint-config-prettier` moved to end of array).
+
 ## [1.0.1] - 2026-03-19
 
 ### Fixed

@@ -103,9 +103,9 @@ The FEN string for the standard starting position.
 
 ```typescript
 interface Position {
-  board: Map<Square, Piece>;
+  board: ReadonlyMap<Square, Piece>;
   castlingRights: CastlingRights;
-  enPassantSquare: Square | undefined;
+  enPassantSquare: EnPassantSquare | undefined;
   fullmoveNumber: number;
   halfmoveClock: number;
   turn: Color;
@@ -125,22 +125,26 @@ interface ParseWarning {
   offset: number;
 }
 
-type Color = 'w' | 'b';
+type Color = 'black' | 'white';
 type Square = `${File}${Rank}`;
+type EnPassantSquare = `${File}${'3' | '6'}`;
 type File = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h';
 type Rank = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8';
-type PieceType = 'p' | 'n' | 'b' | 'r' | 'q' | 'k';
+type PieceType = 'bishop' | 'king' | 'knight' | 'pawn' | 'queen' | 'rook';
 
 interface Piece {
   color: Color;
   type: PieceType;
 }
 
+interface SideCastlingRights {
+  king: boolean;
+  queen: boolean;
+}
+
 interface CastlingRights {
-  wK: boolean;
-  wQ: boolean;
-  bK: boolean;
-  bQ: boolean;
+  black: SideCastlingRights;
+  white: SideCastlingRights;
 }
 ```
 

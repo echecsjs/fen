@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.2] - 2026-04-09
+
+### Changed
+
+- added `no-dependencies` and `serializer` keywords
+
 ## [2.0.1] - 2026-04-09
 
 ### Fixed

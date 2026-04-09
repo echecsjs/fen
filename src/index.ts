@@ -382,5 +382,7 @@ export type {
   SideCastlingRights,
   Square,
 } from './types.js';
-export { STARTING_FEN, stringify };
+export { parse, STARTING_FEN, stringify };
+
+/** @deprecated Use the named export `parse` instead. Will be removed in the next major version. */
 export default parse;

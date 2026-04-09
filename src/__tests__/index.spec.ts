@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import parse, { STARTING_FEN, stringify } from '../index.js';
+import { STARTING_FEN, parse, stringify } from '../index.js';
 
 import type { ParseError, ParseWarning } from '../index.js';
 

@@ -15,7 +15,7 @@ npm install @echecs/fen
 ### Parsing
 
 ```typescript
-import parse from '@echecs/fen';
+import { parse } from '@echecs/fen';
 
 const position = parse(
   'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',

@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.1.0] - 2026-04-09
+
+### Added
+
+- `parse` as a named export (`import { parse } from '@echecs/fen'`).
+
+### Deprecated
+
+- Default export of `parse`. Use the named export instead. Will be removed in
+  v3.
+
 ## [2.0.2] - 2026-04-09
 
 ### Changed

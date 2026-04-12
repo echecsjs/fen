@@ -1,7 +1,7 @@
 {
   "author": "Adrian de la Rosa <adrian@delarosab.me>",
   "bugs": {
-    "url": "https://github.com/mormubis/fen/issues"
+    "url": "https://github.com/echecsjs/fen/issues"
   },
   "description": "Parse and stringify FEN (Forsyth–Edwards Notation) chess positions. Strict TypeScript, no-throw API.",
   "devDependencies": {
@@ -38,7 +38,7 @@
     "README.md",
     "CHANGELOG.md"
   ],
-  "homepage": "https://github.com/mormubis/fen#readme",
+  "homepage": "https://github.com/echecsjs/fen#readme",
   "keywords": [
     "chess",
     "fen",
@@ -53,7 +53,7 @@
   "name": "@echecs/fen",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mormubis/fen.git"
+    "url": "https://github.com/echecsjs/fen.git"
   },
   "sideEffects": false,
   "scripts": {

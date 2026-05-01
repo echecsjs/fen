@@ -51,7 +51,7 @@ describe('parse — failure cases', () => {
 
 describe('parse — starting position', () => {
   it('parses 32 pieces', () => {
-    expect(parse(STARTING)?.board.size).toBe(32);
+    expect(parse(STARTING)?.board?.size).toBe(32);
   });
 
   it('parses white to move', () => {
@@ -78,14 +78,14 @@ describe('parse — starting position', () => {
   });
 
   it('parses white king on e1', () => {
-    expect(parse(STARTING)?.board.get('e1')).toEqual({
+    expect(parse(STARTING)?.board?.get('e1')).toEqual({
       color: 'white',
       type: 'king',
     });
   });
 
   it('parses black queen on d8', () => {
-    expect(parse(STARTING)?.board.get('d8')).toEqual({
+    expect(parse(STARTING)?.board?.get('d8')).toEqual({
       color: 'black',
       type: 'queen',
     });
@@ -104,14 +104,14 @@ describe('parse — after e4', () => {
   });
 
   it('parses white pawn on e4', () => {
-    expect(parse(FEN)?.board.get('e4')).toEqual({
+    expect(parse(FEN)?.board?.get('e4')).toEqual({
       color: 'white',
       type: 'pawn',
     });
   });
 
   it('parses empty e2', () => {
-    expect(parse(FEN)?.board.get('e2')).toBeUndefined();
+    expect(parse(FEN)?.board?.get('e2')).toBeUndefined();
   });
 });
 

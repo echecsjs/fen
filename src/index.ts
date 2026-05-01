@@ -5,7 +5,7 @@ import type {
   File,
   Piece,
   PieceType,
-  Position,
+  PositionData,
   Rank,
   Square,
 } from './types.js';
@@ -185,7 +185,7 @@ function stringifyCastling(rights: CastlingRights): string {
   return result.length > 0 ? result : '-';
 }
 
-function parse(input: string, options?: ParseOptions): Position | null {
+function parse(input: string, options?: ParseOptions): PositionData | null {
   const content = input.replace(/^\uFEFF/, '').trim();
 
   if (content.length === 0) {
@@ -353,10 +353,15 @@ function parse(input: string, options?: ParseOptions): Position | null {
   };
 }
 
-function stringify(position: Position): string {
-  const placement = stringifyPlacement(position.board);
+function stringify(position: PositionData): string {
+  const board = position.board ?? new Map();
+  const castlingRights = position.castlingRights ?? {
+    black: { king: true, queen: true },
+    white: { king: true, queen: true },
+  };
+  const placement = stringifyPlacement(board);
   const turn = position.turn === 'white' ? 'w' : 'b';
-  const castling = stringifyCastling(position.castlingRights);
+  const castling = stringifyCastling(castlingRights);
   const enPassant = position.enPassantSquare ?? '-';
 
   return [
@@ -364,8 +369,8 @@ function stringify(position: Position): string {
     turn,
     castling,
     enPassant,
-    String(position.halfmoveClock),
-    String(position.fullmoveNumber),
+    String(position.halfmoveClock ?? 0),
+    String(position.fullmoveNumber ?? 1),
   ].join(' ');
 }
 
@@ -377,7 +382,7 @@ export type {
   File,
   Piece,
   PieceType,
-  Position,
+  PositionData,
   Rank,
   SideCastlingRights,
   Square,

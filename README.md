@@ -27,7 +27,14 @@ parse('invalid');
 ```
 
 `parse` never throws. It returns `null` when the input is not a valid FEN
-string.
+string. The result can be passed directly to the `Position` constructor from
+`@echecs/position`:
+
+```typescript
+import { Position } from '@echecs/position';
+
+const position = new Position(parse(fen));
+```
 
 #### Error and warning callbacks
 
@@ -86,18 +93,20 @@ STARTING_FEN;
 
 ## API
 
-### `parse(input: string, options?: ParseOptions): Position | null`
+### `parse(input: string, options?: ParseOptions): PositionData | null`
 
-Parses a FEN string into a `Position` object. Returns `null` if the input is not
-a valid FEN string.
+Parses a FEN string into a `PositionData` object. Returns `null` if the input is
+not a valid FEN string.
 
 > **Deprecated:** The default export (`import parse from '@echecs/fen'`) is
 > deprecated. Use the named export instead:
 > `import { parse } from '@echecs/fen'`.
 
-### `stringify(position: Position): string`
+### `stringify(position: PositionData): string`
 
-Serializes a `Position` object into a FEN string.
+Serializes a `PositionData` object into a FEN string. Omitted fields use
+defaults (empty board, white to move, all castling rights, no en passant,
+halfmove clock 0, fullmove number 1).
 
 ### `STARTING_FEN`
 
@@ -105,7 +114,9 @@ The FEN string for the standard starting position.
 
 ### Types
 
-All types are named exports and can be imported directly:
+Chess types (`Color`, `Square`, `Piece`, `CastlingRights`, `PositionData`, etc.)
+are re-exported from `@echecs/position`. Parse/stringify types are defined
+locally:
 
 ```typescript
 import type {
@@ -118,7 +129,7 @@ import type {
   ParseWarning,
   Piece,
   PieceType,
-  Position,
+  PositionData,
   Rank,
   SideCastlingRights,
   Square,
@@ -126,15 +137,6 @@ import type {
 ```
 
 ```typescript
-interface Position {
-  board: ReadonlyMap<Square, Piece>;
-  castlingRights: CastlingRights;
-  enPassantSquare: EnPassantSquare | undefined;
-  fullmoveNumber: number;
-  halfmoveClock: number;
-  turn: Color;
-}
-
 interface ParseOptions {
   onError?: (error: ParseError) => void;
   onWarning?: (warning: ParseWarning) => void;
@@ -153,29 +155,10 @@ interface ParseWarning {
   message: string;
   offset: number;
 }
-
-type Color = 'black' | 'white';
-type Square = `${File}${Rank}`;
-type EnPassantSquare = `${File}${'3' | '6'}`;
-type File = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h';
-type Rank = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8';
-type PieceType = 'bishop' | 'king' | 'knight' | 'pawn' | 'queen' | 'rook';
-
-interface Piece {
-  color: Color;
-  type: PieceType;
-}
-
-interface SideCastlingRights {
-  king: boolean;
-  queen: boolean;
-}
-
-interface CastlingRights {
-  black: SideCastlingRights;
-  white: SideCastlingRights;
-}
 ```
+
+See `@echecs/position` for the full type definitions of `PositionData`, `Color`,
+`Square`, `Piece`, and other chess types.
 
 ## License
 

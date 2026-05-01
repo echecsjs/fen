@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.0.0] - 2026-05-01
+
+### Changed
+
+- All shared types (`Color`, `Square`, `Piece`, `CastlingRights`, etc.) are now
+  re-exported from `@echecs/position` instead of being defined locally.
+- `parse()` returns `PositionData | null` (was `Position | null`).
+- `stringify()` accepts `PositionData` (was `Position`) and fills defaults for
+  omitted fields.
+- `@echecs/position@^4.0.0` is now a required peer dependency.
+
+### Added
+
+- `PositionData` type export (re-exported from `@echecs/position`).
+
+### Removed
+
+- `Position` type export. Use `PositionData` from `@echecs/position` instead.
+
 ## [2.1.1] - 2026-04-17
 
 ### Fixed

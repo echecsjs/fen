@@ -4,7 +4,11 @@
     "url": "https://github.com/echecsjs/fen/issues"
   },
   "description": "Parse and stringify FEN (Forsyth–Edwards Notation) chess positions. Strict TypeScript, no-throw API.",
+  "peerDependencies": {
+    "@echecs/position": "^4.0.0"
+  },
   "devDependencies": {
+    "@echecs/position": "^4.0.0",
     "@eslint/js": "^10.0.1",
     "@typescript-eslint/parser": "^8.57.0",
     "@vitest/coverage-v8": "^4.1.0",

@@ -43,7 +43,7 @@
     "README.md",
     "CHANGELOG.md"
   ],
-  "homepage": "https://github.com/echecsjs/fen#readme",
+  "homepage": "https://fen.echecs.dev",
   "keywords": [
     "chess",
     "fen",

@@ -2,7 +2,7 @@
 
 Agent guidance for the `@echecs/fen` package — FEN parser/serialiser.
 
-**See also:** [`REFERENCES.md`](REFERENCES.md) |
+**See also:** [`SPEC.md`](SPEC.md) | [`REFERENCES.md`](REFERENCES.md) |
 [`COMPARISON.md`](COMPARISON.md)
 
 See the root `AGENTS.md` for workspace-wide conventions.

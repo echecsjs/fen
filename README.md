@@ -1,5 +1,7 @@
 # @echecs/fen
 
+[![Spec](https://img.shields.io/badge/Spec-FIDE-green.svg)](SPEC.md)
+
 Parse and stringify
 [FEN](https://www.chessprogramming.org/Forsyth-Edwards_Notation)
 (Forsyth-Edwards Notation) chess positions. Strict TypeScript, no-throw API.

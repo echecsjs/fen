@@ -100,10 +100,6 @@ STARTING_FEN;
 Parses a FEN string into a `PositionData` object. Returns `null` if the input is
 not a valid FEN string.
 
-> **Deprecated:** The default export (`import parse from '@echecs/fen'`) is
-> deprecated. Use the named export instead:
-> `import { parse } from '@echecs/fen'`.
-
 ### `stringify(position: PositionData): string`
 
 Serializes a `PositionData` object into a FEN string. Omitted fields use

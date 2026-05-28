@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.0] - 2026-05-28
+
+### Removed
+
+- **BREAKING:** Default export of `parse`. Use the named export instead:
+  `import { parse } from '@echecs/fen'`.
+
 ## [3.0.0] - 2026-05-01
 
 ### Changed

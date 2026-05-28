@@ -388,6 +388,3 @@ export type {
   Square,
 } from './types.js';
 export { parse, STARTING_FEN, stringify };
-
-/** @deprecated Use the named export `parse` instead. Will be removed in the next major version. */
-export default parse;

@@ -81,7 +81,7 @@ function parsePlacement(
 
     let fileIndex = 0;
     for (const char of rankString) {
-      const emptyCount = Number.parseInt(char, 10);
+      const emptyCount = Number(char);
       if (Number.isNaN(emptyCount)) {
         const lower = char.toLowerCase();
         const type = CHAR_TO_PIECE_TYPE[lower];
@@ -186,7 +186,7 @@ function stringifyCastling(rights: CastlingRights): string {
 }
 
 function parse(input: string, options?: ParseOptions): PositionData | null {
-  const content = input.replace(/^\uFEFF/, '').trim();
+  const content = input.replace(/^\u{FEFF}/u, '').trim();
 
   if (content.length === 0) {
     options?.onError?.(makeError('Input is empty'));
@@ -258,7 +258,7 @@ function parse(input: string, options?: ParseOptions): PositionData | null {
   const enPassantSquare: EnPassantSquare | undefined =
     epString === '-' ? undefined : (epString as EnPassantSquare);
 
-  const halfmoveClock = Number.parseInt(halfString, 10);
+  const halfmoveClock = Number(halfString);
   if (Number.isNaN(halfmoveClock) || halfmoveClock < 0) {
     options?.onError?.(
       makeError(`Invalid halfmove clock: "${halfString}"`, fieldOffsets[4]),
@@ -267,7 +267,7 @@ function parse(input: string, options?: ParseOptions): PositionData | null {
     return null;
   }
 
-  const fullmoveNumber = Number.parseInt(fullString, 10);
+  const fullmoveNumber = Number(fullString);
   if (Number.isNaN(fullmoveNumber) || fullmoveNumber < 1) {
     options?.onError?.(
       makeError(`Invalid fullmove number: "${fullString}"`, fieldOffsets[5]),
@@ -284,29 +284,27 @@ function parse(input: string, options?: ParseOptions): PositionData | null {
     let blackPawns = 0;
     let whitePieces = 0;
     let blackPieces = 0;
-    let pawnOnBackRank = false;
+    let isPawnOnBackRank = false;
 
     for (const [square, piece] of board) {
       if (piece.color === 'white') {
         whitePieces += 1;
         if (piece.type === 'king') {
           whiteKings += 1;
-        }
-        if (piece.type === 'pawn') {
+        } else if (piece.type === 'pawn') {
           whitePawns += 1;
           if (square.endsWith('1') || square.endsWith('8')) {
-            pawnOnBackRank = true;
+            isPawnOnBackRank = true;
           }
         }
       } else {
         blackPieces += 1;
         if (piece.type === 'king') {
           blackKings += 1;
-        }
-        if (piece.type === 'pawn') {
+        } else if (piece.type === 'pawn') {
           blackPawns += 1;
           if (square.endsWith('1') || square.endsWith('8')) {
-            pawnOnBackRank = true;
+            isPawnOnBackRank = true;
           }
         }
       }
@@ -318,7 +316,7 @@ function parse(input: string, options?: ParseOptions): PositionData | null {
     if (blackKings === 0) {
       options.onWarning(makeWarning('Black king is missing'));
     }
-    if (pawnOnBackRank) {
+    if (isPawnOnBackRank) {
       options.onWarning(makeWarning('Pawn on rank 1 or 8'));
     }
     if (whitePawns > 8) {

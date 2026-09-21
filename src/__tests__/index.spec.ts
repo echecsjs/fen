@@ -45,7 +45,7 @@ describe('parse — failure cases', () => {
   });
 
   it('strips BOM', () => {
-    expect(parse('\uFEFF' + STARTING)).not.toBeNull();
+    expect(parse('\u{FEFF}' + STARTING)).not.toBeNull();
   });
 });
 

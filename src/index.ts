@@ -121,21 +121,19 @@ const CASTLING_PATTERN = /^(?:-|K?Q?k?q?)$/;
 const EN_PASSANT_PATTERN = /^[a-h][36]$/;
 
 function parseCastling(castling: string): CastlingRights | null {
-  if (!CASTLING_PATTERN.test(castling) || castling.length === 0) {
-    // eslint-disable-next-line unicorn/no-null
-    return null;
-  }
-
-  return {
-    black: {
-      king: castling.includes('k'),
-      queen: castling.includes('q'),
-    },
-    white: {
-      king: castling.includes('K'),
-      queen: castling.includes('Q'),
-    },
-  };
+  return CASTLING_PATTERN.test(castling) && castling.length > 0
+    ? {
+        black: {
+          king: castling.includes('k'),
+          queen: castling.includes('q'),
+        },
+        white: {
+          king: castling.includes('K'),
+          queen: castling.includes('Q'),
+        },
+      }
+    : // eslint-disable-next-line unicorn/no-null
+      null;
 }
 
 function stringifyPlacement(board: ReadonlyMap<Square, Piece>): string {

@@ -56,8 +56,8 @@ function makeError(message: string, offset = 0): ParseError {
   return { column: offset + 1, line: 1, message, offset };
 }
 
-function makeWarning(message: string, offset = 0): ParseWarning {
-  return { column: offset + 1, line: 1, message, offset };
+function makeWarning(message: string): ParseWarning {
+  return { column: 1, line: 1, message, offset: 0 };
 }
 
 function parsePlacement(
